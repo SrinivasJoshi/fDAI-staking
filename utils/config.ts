@@ -15,7 +15,7 @@ export const NFT_CONTRACT_ADDRESS =
 
 export const FDAI_ADDRESS = '0x15F0Ca26781C3852f8166eD2ebce5D18265cceb7';
 export const STAKE_CONTRACT_ADDRESS =
-	'0x7210044D732F7f25F11Cc41c00e8B091F9d6a0C1';
+	'0xe243097742360b184eA8B9a208F5501FD409a73c';
 export const STAKE_CONTRACT_ABI = [
 	{
 		inputs: [
@@ -273,6 +273,19 @@ export const STAKE_CONTRACT_ABI = [
 		type: 'event',
 	},
 	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: 'newRewardRate',
+				type: 'uint256',
+			},
+		],
+		name: 'updateRewardRate',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
 		inputs: [],
 		name: 'withdrawYield',
 		outputs: [],
@@ -361,25 +374,6 @@ export const STAKE_CONTRACT_ABI = [
 		type: 'function',
 	},
 	{
-		inputs: [
-			{
-				internalType: 'address',
-				name: 'user',
-				type: 'address',
-			},
-		],
-		name: 'calculateYieldTime',
-		outputs: [
-			{
-				internalType: 'uint256',
-				name: '',
-				type: 'uint256',
-			},
-		],
-		stateMutability: 'view',
-		type: 'function',
-	},
-	{
 		inputs: [],
 		name: 'daiToken',
 		outputs: [
@@ -420,7 +414,39 @@ export const STAKE_CONTRACT_ABI = [
 	},
 	{
 		inputs: [],
+		name: 'owner',
+		outputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
 		name: 'rewardRate',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'user',
+				type: 'address',
+			},
+		],
+		name: 'stakesOfUser',
 		outputs: [
 			{
 				internalType: 'uint256',

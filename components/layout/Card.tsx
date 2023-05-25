@@ -20,6 +20,8 @@ interface Props {
 	title: string;
 	description: string;
 	balance?: any;
+	loading: boolean;
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Card = (props: Props) => {
@@ -66,6 +68,7 @@ const Card = (props: Props) => {
 	});
 
 	const submitTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
+		props.setLoading(true);
 		e.preventDefault();
 		if (props.title === 'Withdraw Yield') {
 			contractWrite1.writeAsync?.().then((res) => {
@@ -84,6 +87,7 @@ const Card = (props: Props) => {
 				});
 			});
 		}
+		props.setLoading(false);
 	};
 
 	return (
@@ -113,6 +117,7 @@ const Card = (props: Props) => {
 					type='blue'
 					submit={true}
 					handleClick={() => {}}
+					disabled={props.loading}
 				/>
 			)}
 		</form>

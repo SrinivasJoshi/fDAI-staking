@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import CustomButton from './CustomButton';
 import {
 	FDAI_ADDRESS,
@@ -6,32 +6,31 @@ import {
 	STAKE_CONTRACT_ADDRESS,
 	STAKE_CONTRACT_ABI,
 } from '@/utils/config';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { useDebounce } from 'use-debounce';
 import {
 	useNetwork,
 	useAccount,
-	useBalance,
 	useContractWrite,
 	usePrepareContractWrite,
 	useWaitForTransaction,
-	erc20ABI,
 } from 'wagmi';
 import { utils } from 'ethers';
 
 interface Card2Props {
 	title: string;
-	description: string;
-	balance: any;
+	balance1: any;
+	stakesOfUser: any;
+	loading: boolean;
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Card2: FC<Card2Props> = (props: Card2Props) => {
 	const { chain } = useNetwork();
-	const { address } = useAccount();
 	const [input, setInput] = useState<string>('');
 	const [debouncedInput] = useDebounce(input, 500);
 
-	const { config: config1, status: status1 } = usePrepareContractWrite({
+	const { config: config1 } = usePrepareContractWrite({
 		address: STAKE_CONTRACT_ADDRESS as `0x{string}`,
 		abi: STAKE_CONTRACT_ABI,
 		chainId: chain?.id,
@@ -47,7 +46,7 @@ const Card2: FC<Card2Props> = (props: Card2Props) => {
 		},
 	});
 
-	const { config: config2, status: status2 } = usePrepareContractWrite({
+	const { config: config2, status: approveStatus } = usePrepareContractWrite({
 		address: STAKE_CONTRACT_ADDRESS as `0x{string}`,
 		abi: STAKE_CONTRACT_ABI,
 		chainId: chain?.id,
@@ -81,6 +80,7 @@ const Card2: FC<Card2Props> = (props: Card2Props) => {
 	});
 
 	const submitTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
+		props.setLoading(true);
 		e.preventDefault();
 		if (props.title === 'Stake fDAI') {
 			contractWrite3.writeAsync?.().then((res) => {
@@ -99,34 +99,21 @@ const Card2: FC<Card2Props> = (props: Card2Props) => {
 				});
 			});
 		}
+		props.setLoading(false);
+	};
+	const stakefDai = async () => {
+		contractWrite1.writeAsync?.().then((res) => {
+			toast.promise(res.wait(), {
+				loading: 'Waiting for confirmation',
+				success: 'Staking Successful',
+				error: 'Staking failed',
+			});
+		});
 	};
 
-	const waitForTransaction1 = useWaitForTransaction({
-		hash: contractWrite3.data?.hash,
-		onSuccess() {
-			contractWrite1.writeAsync?.().then((res) => {
-				toast.promise(res.wait(), {
-					loading: 'Waiting for confirmation',
-					success: 'Staking Successful',
-					error: 'Staking failed',
-				});
-			});
-		},
-	});
-
-	const waitForTransaction2 = useWaitForTransaction({
-		hash: contractWrite1.data?.hash,
-		onSettled() {
-			props.balance.refetch();
-		},
-	});
-
-	const waitForTransaction3 = useWaitForTransaction({
-		hash: contractWrite2.data?.hash,
-		onSettled() {
-			props.balance.refetch();
-		},
-	});
+	if (approveStatus === 'success') {
+		stakefDai();
+	}
 
 	return (
 		<form
@@ -151,6 +138,7 @@ const Card2: FC<Card2Props> = (props: Card2Props) => {
 				type='blue'
 				submit={true}
 				handleClick={() => {}}
+				disabled={props.loading}
 			/>
 		</form>
 	);
