@@ -457,7 +457,7 @@ export const STAKE_CONTRACT_ABI = [
 		stateMutability: 'view',
 		type: 'function',
 	},
-];
+] as const;
 
 export const FDAI_CONTRACT_ABI = [
 	{
@@ -775,7 +775,7 @@ export const FDAI_CONTRACT_ABI = [
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
-];
+] as const;
 
 export const ironOptions = {
 	cookieName: SITE_NAME,

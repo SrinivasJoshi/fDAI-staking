@@ -65,11 +65,9 @@ const Web3Provider = (props: Props) => {
 					darkMode: darkTheme({ overlayBlur: 'small' }),
 				}}
 				appInfo={{
-					appName: 'DAPP KIT',
-					learnMoreUrl: 'https://github.com/Envoy-VC-dapp-kit',
+					appName: 'fDAI-Staking',
 				}}
-				children={props.children}
-			></RainbowKitProvider>
+				children={props.children}></RainbowKitProvider>
 		</WagmiConfig>
 	);
 };
